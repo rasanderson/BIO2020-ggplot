@@ -10,13 +10,46 @@ knitr::opts_chunk$set(echo = FALSE)
 ```
 
 
-## Topic 1
+## Introduction
 
-### Exercise 
+### The `ggformula` and `ggplot` packages
 
-*Here's a simple exercise with an empty code chunk provided for entering the answer.*
+Until now you have used a range of plotting commands to produce scatterplots,
+barplots, boxplots etc. that all come from the `ggformula` R package. You may
+not have noticed this package, as it is automatically loaded by `bio2020` if
+you use it, or by `mosaic`. The `ggformula` package has a very consistent 
+syntax, that aligns with most of your data analyses, in that it is:
 
-Write the R code required to add two plus two:
+`gf_plottype(response ~ explanatory variable(s), data = dataset, ...)`
+
+where the `...` are the options. You can read all about using the `ggformula`
+package at <http://www.mosaic-web.org/ggformula/articles/pkgdown/ggformula-blog.html>
+
+What you might not be aware of is that `ggformula` actually provides a simple
+interface to a much more advanced package called `ggplot2`. The latter has many
+powerful features, including creating maps, 3D plots, tree-diagrams, indeed
+every sort of graphic you could possibly think of. Hundreds of extensions to
+the original `ggplot2` package are now available in R, which allow you to 
+produce virtually any plot you could possibly want. You can view a selection of
+them at <https://exts.ggplot2.tidyverse.org/gallery/>
+
+Oh, and in case you are wondering why they all seem to have the letters `gg` in
+them, it is because they are based on trying to standardise creation of plots
+via a "grammar of graphics".
+
+### Transitioning from `ggformula` to `ggplot2`
+The first question you might have is _Why do I need to bother learning `ggplot2`?_
+Basically, because you might:
+
+* need to create some more complex plots that `ggformula` cannot handle
+* you are working with a member of staff (or in your future career) where `ggplot2`
+is well understood, whereas `ggformula` is little used outside teaching.
+
+Fortunately, as you already know how to use `ggformula` you will find it very easy
+to learn `ggplot2` and this tutorial will teach you the basics.
+
+## Boxplot
+
 
 ```{r two-plus-two, exercise=TRUE}
 
@@ -34,7 +67,7 @@ add <- function() {
 }
 ```
 
-## Topic 2
+## Histogram
 
 ### Exercise with Hint
 
