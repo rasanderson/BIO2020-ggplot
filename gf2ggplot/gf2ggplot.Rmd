@@ -1,6 +1,9 @@
 ---
 title: "Comparison of ggformula and ggplot2 functions"
-output: learnr::tutorial
+output:
+  learnr::tutorial:
+    progressive: true
+    allow_skip: true
 runtime: shiny_prerendered
 ---
 
@@ -9,8 +12,33 @@ library(learnr)
 library(ggformula)
 library(palmerpenguins)
 library(magrittr)
-knitr::opts_chunk$set(echo = FALSE)
+#knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(
+  echo = FALSE,
+  fig.align = "center",
+  fig.width = 6, fig.height = 4.5)
 ```
+
+<style type="text/css">
+span.boxed {
+  border:5px solid gray;
+  border-radius:10px;
+  padding: 5px;
+}
+span.invboxed {
+  border:5px solid gray;
+  padding: 5px;
+  border-radius:10px;
+  color: white;
+}
+
+table, td, th { border:0px; }
+
+/* cellpadding */
+th, td { padding: 5px; }
+
+</style>
+
 
 
 ## Introduction
@@ -57,7 +85,254 @@ is well understood, whereas `ggformula` is little used outside teaching.
 Fortunately, as you already know how to use `ggformula` you will find it very easy
 to learn `ggplot2` and this tutorial will teach you the basics.
 
-## Boxplot
+## Background refresher for `ggformula`
+Take a look at the following graph, which we will create shortly using code. It is from the `palmerpenguins` example that you looked at earlier on this course and shows penguin bill depth vs length for three species of penguin.
+
+```{r echo=FALSE, messages=FALSE, warning=FALSE}
+gf_point(bill_depth_mm ~ bill_length_mm, data= penguins)
+
+```
+
+To get R (or any software) to create this plot (or do anything else, really),
+there are two important questions you must be able to answer.  Before
+continuing, see if you can figure out what they are.
+
+### The Questions
+
+To get R (or any software) to create this plot, there are two
+important questions you must be able to answer:
+
+#### 1. What do you want the computer to do?
+  
+#### 2. What must the computer know in order to do that?
+
+### Answers to the questions
+
+
+To make this plot, the answers to our questions are 
+
+#### 1. What do you want the computer to do?
+
+**A.** Make a scatter plot (i.e., a **plot** consisting of **points**)
+  
+#### 2. What must the computer know in order to do that?
+
+**A.** The data used for the plot:
+
+  * The variable to be plotted along the $y$ axis.
+  * The variable to be plotted along the $x$ axis.
+  * The data set that contains the variables.
+      
+We just need to learn how to tell R these answers.     
+
+
+### The Formula Template
+
+We will provide answers to our two questions by filling in
+the boxes of this important template:
+
+
+<center>
+<h2><strong><span class="invboxed">goal</span> ( <span class="invboxed">yyy</span> ~ <span class="invboxed">xxx</span> , data = <span class="invboxed">mydata</span> )</strong> 
+</h2></center>
+
+&nbsp;
+
+We just need to identify which portions of our answers go into which boxes.
+
+### The Name of the Game
+
+It is useful to provide names for the boxes:
+
+<center>
+<h2><strong><span class="boxed">goal</span> ( <span class="boxed">&nbsp;y&nbsp;</span> ~ <span class="boxed">&nbsp;x&nbsp;</span> , data = <span class="boxed">mydata</span> , ...)</strong> 
+</h2></center>
+&nbsp;
+
+These names can help us remember which things go where.
+(The `...` indicates that there are some additional arguments we will add
+eventually.)
+
+#### Other versions
+
+Sometimes we will add or subtract a bit from our formula.
+Here are some other forms we will eventually see.
+
+```{r templates, eval=FALSE, echo = TRUE}
+# simpler version
+goal( ~ x, data = mydata )          
+# fancier version
+goal( y ~ x | z , data = mydata )   
+# unified version
+goal( formula , data = mydata )     
+```
+
+### 2 Questions and the Formula Template
+
+
+&nbsp;
+<center>
+<h2><strong><span class="boxed">goal</span> ( <span class="boxed">&nbsp;y&nbsp;</span> ~ <span class="boxed">&nbsp;x&nbsp;</span> , data = <span class="boxed">mydata</span> )</strong> 
+</h2></center>
+ 
+&nbsp;
+
+
+#### Q. What do you want R to do?  A. goal
+
+ * This determines the function to use.
+ * For a plot, the function will describe what sorts of marks to draw (points, in our example).
+
+
+#### Q. What must R know to do that?  A. arguments 
+
+ * This determines the inputs to the function.
+ * For a plot, we must identify the variables and the data frame that contains them.
+ 
+## Assembling the pieces
+
+#### Template
+
+&nbsp;
+<center>
+<h2><strong><span class="boxed">goal</span> ( <span class="boxed">&nbsp;y&nbsp;</span> ~ <span class="boxed">&nbsp;x&nbsp;</span> , data = <span class="boxed">mydata</span> )</strong> 
+</h2></center>
+ 
+&nbsp;
+
+#### Pieces
+
+<table align = "center" >
+<tr>
+  <th> box </th>
+  <th> fill in with </th>
+  <th> purpose </th>
+</tr>
+<tr>
+  <td> `goal` </td>
+  <td> `gf_point` </td>
+  <td> plot some points </td>
+</tr>
+<tr>
+  <td> `y` </td>
+  <td> `bill_depth_mm` </td>
+  <td> y-axis variable</td>
+</tr>
+<tr>
+  <td> `x` </td>
+  <td> `bill_length_mm` </td>
+  <td> x-axis variable </td>
+</tr>
+<tr>
+  <td> `mydata` </td>
+  <td> `penguins`</td>
+  <td> name of data set </td>
+</tr>
+</table>
+
+#### Exercise
+
+Put each piece in its place in the template below and then run the code
+to create the plot.
+
+```{r, gf_point, echo = TRUE, exercise = TRUE, warning=FALSE}
+goal(y ~ x, data = mydata)
+```
+<div id="gf_point-hint">
+If you get an "object not found" or "could not find function" error message,
+that indicates that you have not correctly filled in one of the four boxes from
+the template.  
+
+Note: R is case sensitive, so watch your capitalization.
+</div>
+  
+## Background to `ggplot` structure
+Here is the same graph created with `ggplot`. It looks identical here, although sometimes you need to tweak default options to get the same results.
+
+```{r echo=FALSE, messages=FALSE, warning=FALSE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm)) +
+  geom_point()
+
+```
+
+Using ``ggplot` can be a little confusing at first as it does not use a formula interface. The first line will usually be to create a plotting canvas:
+
+<center>
+<h2><strong><span class="boxed">ggplot</span> ( aes (<span class="boxed">&nbsp;y&nbsp;</span> , <span class="boxed">&nbsp;x&nbsp;</span> ), data = <span class="boxed">mydata</span> , ...)</strong> 
+</h2></center>
+&nbsp;
+
+The **aes** stands for "Aesthetics" and states what will be on the x and y axes. Like `ggformula` you may only have an x-variable (e.g. if doing a distribution plot). Note: this plotting canvas is blank. The x and y axis scales, labels are there, but nothing is displayed!
+
+```{r echo=FALSE, warning=FALSE, messages=FALSE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm))
+
+```
+
+This is because `ggplot` needs at least one more line of code to state what sort of **geometry** you
+want to display. Here we want scatterpoints, so we use `geom_point()`. Additional lines can be added to tweak the plot. So the basic `ggplot2` structure is:
+
+<center>
+<h2><strong><span class="boxed">ggplot</span> ( aes (<span class="boxed">&nbsp;y&nbsp;</span> , <span class="boxed">&nbsp;x&nbsp;</span> ), data = <span class="boxed">mydata</span> , ...) + <br><br> <span class="boxed">geometry</span> </strong> 
+</h2></center>
+&nbsp;
+
+Note in particular:
+
+* The `+` at the end of a line. You do not use `%>%` in `ggplot` calls
+* The `geometry` would be replaced by `geom_point()`, `geom_histogram()`, `geom_smooth()` etc.
+
+**Note** You may see the words `data=` omitted. It can go before or after `aes()`.
+
+#### **Pieces**
+
+<table align = "center" >
+<tr>
+  <th> box </th>
+  <th> fill in with </th>
+  <th> purpose </th>
+</tr>
+<tr>
+  <td> `ggplot` </td>
+  <td> `ggplot` </td>
+  <td> Setup a blank plotting canvas </td>
+</tr>
+<tr>
+  <td> `y` </td>
+  <td> `y = bill_depth_mm` </td>
+  <td> x axis variable</td>
+</tr>
+<tr>
+  <td> `x` </td>
+  <td> `x = bill_length_mm` </td>
+  <td> x-axis variable </td>
+</tr>
+<tr>
+  <td> `mydata` </td>
+  <td> `data = penguins`</td>
+  <td> name of data set </td>
+</tr>
+<tr>
+  <td> `geometry` </td>
+  <td> `geom_point()`</td>
+  <td> Add points to the canvas </td>
+</tr>
+</table>
+
+Now, complete the following `ggplot` code to recreate the full plot:
+
+```{r example_ggplot, exercise=TRUE, warning=FALSE}
+ggplot(data=mydata, aes(y, x)) +
+  geometry()
+
+```
+```{r example_ggplot-solution}
+ggplot(data = penguins, aes(y = bill_depth_mm, x = bill_length_mm)) +
+  geom_point()
+```
+
+
+## Boxplots
 We'll begin by creating a simple boxplot using `ggformula` and compare it with
 the `ggplot` syntax. One minor area to watch for is that the R library is
 called `ggplot2` but the actual function is `ggplot` which is a bit confusing. We
@@ -78,15 +353,14 @@ change background theme, legend labels etc. The following uses the `%>%` pipe
 command to keep adding extra improvements to the graph. This is from the
 `mosaic` package but is automatically loaded by `bio2020` if you use it.
 
-```{r pp_boxplot_tweaked, exercise=TRUE}
+```{r pp_boxplot_tweaked, exercise=TRUE, warning=TRUE}
 gf_boxplot(body_mass_g ~ species, data = penguins) %>% 
   gf_labs(x = "Penguin species", y = "Body mass (g)", caption = "Summary boxplot") %>% 
   gf_theme(theme_classic())
 
 ```
 
-Try running this in RStudio. You may notice a cryptic warning about 2 rows being
-omitted.
+I've deliberately allowed R to display warning messages here. You can see one next to your plot. See if you can answer the following question.
 
 ```{r why2rows, echo=FALSE}
 question("Why was a warning about 2 missing rows displayed? Hint: try summary(penguins) in the above code box",
@@ -102,17 +376,13 @@ The syntax is a bit more complex, and admittedly confusing, at first. Here is a
 simple boxplot:
 
 ```{r boxplot_ggplot, exercise=TRUE}
-ggplot(penguins, aes(x = species, y = body_mass_g)) +
+ggplot(data = penguins, aes(x = species, y = body_mass_g)) +
   geom_boxplot()
 ```
 
-The output looks the same as before, but there as several "gotcha's" to look out
-for:
+**Remember**
 
-* The first line is usually:
-`ggplot(datasetname, aes(something_about_x_and_y_data))`
-
-The `aes` is short for `aesthetics` and defines what is going to provide the
+* The `aes` is short for `aesthetics` and defines what is going to provide the
 overall scaffold for your graph. Here we have both x and y axes defined, but
 you may sometimes only have a single variable, for example if doing a frequency
 histogram.
@@ -128,7 +398,7 @@ To give you a better understanding of what is going on, let's re-run the above c
 but only entering the first line, without the `+` symbol at the end:
 
 ```{r aesonly, exercise=TRUE}
-ggplot(penguins, aes(x = species, y = body_mass_g))
+ggplot(data = penguins, aes(x = species, y = body_mass_g))
 ```
 
 So you can see that a blank canvas, the right size for your data, has been
@@ -278,3 +548,23 @@ ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm, colour=species)) +
      
 ```
 
+
+## Bells and whistles
+You can do a lot more with both `ggformula` and `ggplot` than is shown in this brief summary.
+
+### `ggformula`
+For `ggformula` I particularly recommend 
+
+* [Plotting with formulas]<http://www.mosaic-web.org/ggformula/tutorials/introduction.html> This gives a reminder of the syntax, and I have taken some ideas for earlier slides from this site
+* [Refining ggformula plots]<http://www.mosaic-web.org/ggformula/tutorials/refining.html> This shows you how to adjust colours, scales, perspective etc.
+
+### `ggplot2`
+The official documentation is at <https://ggplot2.tidyverse.org/> where you can download quick-reference "cheatsheets" as pdf files which are very helpful.
+
+There are huge numbers of extensions to ggplot2 which basically allow you to create any plot you could imagine, and lots you haven't even thought of yet. You can see these at:
+
+<https://exts.ggplot2.tidyverse.org/gallery/>
+
+The list that is available is updated and improved on a regular basis.
+
+Happy plotting!
