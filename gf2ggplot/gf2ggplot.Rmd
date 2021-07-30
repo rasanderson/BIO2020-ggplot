@@ -1,5 +1,5 @@
 ---
-title: "Tutorial"
+title: "Comparison of ggformula and ggplot2 functions"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -23,7 +23,9 @@ not have noticed this package, as it is automatically loaded by `bio2020` if
 you use it, or by `mosaic`. The `ggformula` package has a very consistent 
 syntax, that aligns with most of your data analyses, in that it is:
 
+<font size="5">
 `gf_plottype(response ~ explanatory variable(s), data = dataset, ...)`
+</font>
 
 where the `...` are the options. You can read all about using the `ggformula`
 package at <http://www.mosaic-web.org/ggformula/articles/pkgdown/ggformula-blog.html>
