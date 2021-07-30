@@ -243,8 +243,38 @@ two commands together
 
 ```{r gf_point_spp_line, exercise = TRUE}
 gf_point(bill_depth_mm ~ bill_length_mm, color = ~species, data= penguins) %>% 
-  gf_lm()
+  gf_lm(interval = "confidence")
 
 
+```
+
+### Second with `ggplot2`
+As you might expect, the commands are very slightly more complex, but roughly
+follow the same pattern.
+
+Basic scatterplot; note that in the `aes()` aesthetics call, you can put y before
+x, as in this example, as long as you name them properly:
+
+```{r ggp_scatter, exercise=TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm)) +
+  geom_point()
+
+```
+
+Now add the colours for species:
+
+```{r ggp_points_spp, exercise = TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm, colour=species)) +
+  geom_point()
+
+```
+
+Finally, add the fitted lines
+
+```{r ggp_points_spp_lines, exercise = TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm, colour=species)) +
+  geom_point() +
+  geom_lm(interval = "confidence")
+     
 ```
 
