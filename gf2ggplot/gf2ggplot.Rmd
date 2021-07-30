@@ -146,4 +146,70 @@ ggplot(penguins, aes(x = species, y = body_mass_g)) +
 ```
 
 
+## Plotting individual variables
+You will recall that sometimes you want to view a single variable, e.g. its 
+frequency histogram or the count of observations. Again using the `penguins` 
+dataset, let's compare `ggformula` and `ggplot`. These are shown with the bare
+minimum of commands - you can try changing colours, axis labels, title and
+themes in your own time.
 
+### Frequency histograms
+In `gf_formula` the command is simply:
+
+```{r gf_formula_fhist, exercise=TRUE}
+gf_histogram(~body_mass_g, data=penguins)
+
+```
+
+whilst the equivalent in `ggplot2` is:
+
+```{r ggplot_fhist, exercise=TRUE}
+ggplot(penguins, aes(x=body_mass_g)) +
+  geom_histogram()
+```
+
+A message pops up about `bins = 30` which is the default maximum for `geom_histogram`.
+Try changing the line to `geom_histogram(binwidth = 100)` to see the difference it makes.
+
+### Density plots
+These are smoothed curves to look at your frequency histograms, and can be used 
+separately, or overlaid onto the frequency histogram.
+
+In `ggformula` as hopefully you recall, this can be done with:
+
+```{r gf_density, exercise=TRUE}
+gf_density(~body_mass_g, data=penguins)
+
+```
+
+Again, the `ggplot2` equivalent is similar:
+
+```{r ggp_density, exercise=TRUE}
+ggplot(penguins, aes(x=body_mass_g)) +
+  geom_density(fill = "grey")
+```
+
+I've added a `fill = "grey"` option. By default in `ggplot` only the line is
+displayed. **In your own time**: edit the code to see if you can overlay a 
+density plot on top of a frequency plot. Use `%>%` or `+` to link the relevant
+functions together for `ggformula` and `ggplot` respectively.
+
+### Simple bar charts
+If we want to visualise the number of observations at each island, this again is
+easy to do:
+
+```{r gf_bar, exercise=TRUE}
+gf_bar(~island, data= penguins)
+```
+
+whilst the equivalent for `ggplot2` is:
+
+```{r ggp_bar, exercise=TRUE}
+ggplot(penguins, aes(x = island)) +
+  geom_bar(stat = "count")
+```
+
+You can see that you have to specify the `stat = "count"` option to `geom_bar`.
+This is because `ggplot` is a little more sophisticated. You might already have
+a dataframe containing the counts, in which case you would issue `stat = "identity"`
+instead.
