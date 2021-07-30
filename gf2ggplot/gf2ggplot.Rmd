@@ -1,5 +1,5 @@
 ---
-title: "Tutorial"
+title: "Comparison of ggformula and ggplot2 functions"
 output: learnr::tutorial
 runtime: shiny_prerendered
 ---
@@ -23,7 +23,9 @@ not have noticed this package, as it is automatically loaded by `bio2020` if
 you use it, or by `mosaic`. The `ggformula` package has a very consistent 
 syntax, that aligns with most of your data analyses, in that it is:
 
+<font size="5">
 `gf_plottype(response ~ explanatory variable(s), data = dataset, ...)`
+</font>
 
 where the `...` are the options. You can read all about using the `ggformula`
 package at <http://www.mosaic-web.org/ggformula/articles/pkgdown/ggformula-blog.html>
@@ -146,4 +148,133 @@ ggplot(penguins, aes(x = species, y = body_mass_g)) +
 ```
 
 
+## Plotting individual variables
+You will recall that sometimes you want to view a single variable, e.g. its 
+frequency histogram or the count of observations. Again using the `penguins` 
+dataset, let's compare `ggformula` and `ggplot`. These are shown with the bare
+minimum of commands - you can try changing colours, axis labels, title and
+themes in your own time.
+
+### Frequency histograms
+In `gf_formula` the command is simply:
+
+```{r gf_formula_fhist, exercise=TRUE}
+gf_histogram(~body_mass_g, data=penguins)
+
+```
+
+whilst the equivalent in `ggplot2` is:
+
+```{r ggplot_fhist, exercise=TRUE}
+ggplot(penguins, aes(x=body_mass_g)) +
+  geom_histogram()
+```
+
+A message pops up about `bins = 30` which is the default maximum for `geom_histogram`.
+Try changing the line to `geom_histogram(binwidth = 100)` to see the difference it makes.
+
+### Density plots
+These are smoothed curves to look at your frequency histograms, and can be used 
+separately, or overlaid onto the frequency histogram.
+
+In `ggformula` as hopefully you recall, this can be done with:
+
+```{r gf_density, exercise=TRUE}
+gf_density(~body_mass_g, data=penguins)
+
+```
+
+Again, the `ggplot2` equivalent is similar:
+
+```{r ggp_density, exercise=TRUE}
+ggplot(penguins, aes(x=body_mass_g)) +
+  geom_density(fill = "grey")
+```
+
+I've added a `fill = "grey"` option. By default in `ggplot` only the line is
+displayed. **In your own time**: edit the code to see if you can overlay a 
+density plot on top of a frequency plot. Use `%>%` or `+` to link the relevant
+functions together for `ggformula` and `ggplot` respectively.
+
+### Simple bar charts
+If we want to visualise the number of observations at each island, this again is
+easy to do:
+
+```{r gf_bar, exercise=TRUE}
+gf_bar(~island, data= penguins)
+```
+
+whilst the equivalent for `ggplot2` is:
+
+```{r ggp_bar, exercise=TRUE}
+ggplot(penguins, aes(x = island)) +
+  geom_bar(stat = "count")
+```
+
+You can see that you have to specify the `stat = "count"` option to `geom_bar`.
+This is because `ggplot` is a little more sophisticated. You might already have
+a dataframe containing the counts, in which case you would issue `stat = "identity"`
+instead.
+
+## Compare multiple continuous variables
+A common scenario might be that you want to compare two variables in a scatterplot. Let's
+look at penguin bill depth and depth for the three species.
+
+### First with `ggformula`
+
+```{r gf_points, exercise=TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, data= penguins)
+
+```
+
+OK, so you can see broad trends that longer length and longer depth seem 
+correlated, but there are obvious groups. So it would be better to label them
+against species in case that is what is going on, by including `colour = ~species`
+into our `gf_point` call. Don't forget the `~` in front of `species`:
+
+```{r gf_points_spp, exercise=TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, colour = ~species, data= penguins)
+
+```
+
+Finally, to really show off, let's add a fitted straight line to each species.
+This requires a separate `gf_line()` call, so remember the `%>%` to pipe the
+two commands together
+
+```{r gf_point_spp_line, exercise = TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, color = ~species, data= penguins) %>% 
+  gf_lm(interval = "confidence")
+
+
+```
+
+### Second with `ggplot2`
+As you might expect, the commands are very slightly more complex, but roughly
+follow the same pattern.
+
+Basic scatterplot; note that in the `aes()` aesthetics call, you can put y before
+x, as in this example, as long as you name them properly:
+
+```{r ggp_scatter, exercise=TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm)) +
+  geom_point()
+
+```
+
+Now add the colours for species:
+
+```{r ggp_points_spp, exercise = TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm, colour=species)) +
+  geom_point()
+
+```
+
+Finally, add the fitted lines
+
+```{r ggp_points_spp_lines, exercise = TRUE}
+ggplot(penguins, aes(y=bill_depth_mm, x=bill_length_mm, colour=species)) +
+  geom_point() +
+  geom_lm(interval = "confidence")
+     
+```
 
