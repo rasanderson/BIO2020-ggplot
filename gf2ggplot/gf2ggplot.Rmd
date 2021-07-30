@@ -215,3 +215,36 @@ You can see that you have to specify the `stat = "count"` option to `geom_bar`.
 This is because `ggplot` is a little more sophisticated. You might already have
 a dataframe containing the counts, in which case you would issue `stat = "identity"`
 instead.
+
+## Compare multiple continuous variables
+A common scenario might be that you want to compare two variables in a scatterplot. Let's
+look at penguin bill depth and depth for the three species.
+
+### First with `ggformula`
+
+```{r gf_points, exercise=TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, data= penguins)
+
+```
+
+OK, so you can see broad trends that longer length and longer depth seem 
+correlated, but there are obvious groups. So it would be better to label them
+against species in case that is what is going on, by including `colour = ~species`
+into our `gf_point` call. Don't forget the `~` in front of `species`:
+
+```{r gf_points_spp, exercise=TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, colour = ~species, data= penguins)
+
+```
+
+Finally, to really show off, let's add a fitted straight line to each species.
+This requires a separate `gf_line()` call, so remember the `%>%` to pipe the
+two commands together
+
+```{r gf_point_spp_line, exercise = TRUE}
+gf_point(bill_depth_mm ~ bill_length_mm, color = ~species, data= penguins) %>% 
+  gf_lm()
+
+
+```
+
